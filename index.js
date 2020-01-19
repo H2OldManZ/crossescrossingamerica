@@ -4,55 +4,16 @@ import Overlay from 'ol/Overlay';
 import View from 'ol/View';
 import {toStringHDMS} from 'ol/coordinate';
 import TileLayer from 'ol/layer/Tile';
-import {toLonLat} from 'ol/proj';
-import TileJSON from 'ol/source/TileJSON';
-
-var key = 'pk.eyJ1IjoiaDJvbGRtYW56IiwiYSI6ImNrNWtkbXFlYTBkMTkzbW5yM3VrbzJwaG0ifQ._xcAEWbGkPVHcNpB3Mz1AQ';
-
-/**
- * Elements that make up the popup.
- */
-var container = document.getElementById('popup');
-var content = document.getElementById('popup-content');
-var closer = document.getElementById('popup-closer');
+import {fromLonLat, toLonLat} from 'ol/proj';
+import OSM from 'ol/source/OSM';
 
 
-/**
- * Create an overlay to anchor the popup to the map.
- */
-var overlay = new Overlay({
-  element: container,
-  autoPan: true,
-  autoPanAnimation: {
-    duration: 250
-  }
+var layer = new TileLayer({
+  source: new OSM()
 });
 
-
-/**
- * Add a click handler to hide the popup.
- * @return {boolean} Don't follow the href.
- */
-closer.onclick = function() {
-  overlay.setPosition(undefined);
-  closer.blur();
-  return false;
-};
-
-
-/**
- * Create the map.
- */
 var map = new Map({
-  layers: [
-    new TileLayer({
-      source: new TileJSON({
-        url: 'https://api.tiles.mapbox.com/v4/mapbox.natural-earth-hypso-bathy.json?access_token=' + key,
-        crossOrigin: 'anonymous'
-      })
-    })
-  ],
-  overlays: [overlay],
+  layers: [layer],
   target: 'map',
   view: new View({
     center: [0, 0],
@@ -60,15 +21,42 @@ var map = new Map({
   })
 });
 
+var pos = fromLonLat([16.3725, 48.208889]);
 
-/**
- * Add a click handler to the map to render the popup.
- */
-map.on('singleclick', function(evt) {
+// Vienna marker
+var marker = new Overlay({
+  position: pos,
+  positioning: 'center-center',
+  element: document.getElementById('marker'),
+  stopEvent: false
+});
+map.addOverlay(marker);
+
+// Vienna label
+var vienna = new Overlay({
+  position: pos,
+  element: document.getElementById('vienna')
+});
+map.addOverlay(vienna);
+
+// Popup showing the position the user clicked
+var popup = new Overlay({
+  element: document.getElementById('popup')
+});
+map.addOverlay(popup);
+
+map.on('click', function(evt) {
+  var element = popup.getElement();
   var coordinate = evt.coordinate;
   var hdms = toStringHDMS(toLonLat(coordinate));
 
-  content.innerHTML = '<p>You clicked here:</p><code>' + hdms +
-      '</code>';
-  overlay.setPosition(coordinate);
+  $(element).popover('destroy');
+  popup.setPosition(coordinate);
+  $(element).popover({
+    placement: 'top',
+    animation: false,
+    html: true,
+    content: '<p>The location you clicked was:</p><code>' + hdms + '</code>'
+  });
+  $(element).popover('show');
 });
