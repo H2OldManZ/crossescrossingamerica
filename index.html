@@ -1,40 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <title>Overlay</title>
-    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='http://ol3js.org/en/master/css/ol.css'>
     <style>
-      .map {
+      #map {
+        height: 100%;
         width: 100%;
-        height:400px;
-      }
-      #marker {
-        width: 20px;
-        height: 20px;
-        border: 1px solid #088;
-        border-radius: 10px;
-        background-color: #0FF;
-        opacity: 0.5;
-      }
-      #vienna {
-        text-decoration: none;
-        color: white;
-        font-size: 11pt;
-        font-weight: bold;
-        text-shadow: black 0.1em 0.1em 0.2em;
-      }
-      .popover-content {
-        min-width: 180px;
       }
     </style>
+    <title>OpenLayers 3 example</title>
+    <script src="ol/ol.js" type="text/javascript"></script>
   </head>
   <body>
-    <div id="map" class="map"></div>
-    <div style="display: none;">
+    <h1>My Map</h1>
+    <div id="map"></div>
+    <script type="text/javascript">
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+           new ol.layer.Tile({
+              source: new ol.source.OSM()
+           }),
+           new ol.layer.Vector({
+              title: 'added Layer',
+              source: new ol.source.GeoJSON({
+                 projection : 'EPSG:4326',
+                 url: 'mygeojson.json'
+              })
+           })
+        ],
+        view: new ol.View({
+          center:[52.5243700 , 13.4105300],
+          zoom:2
+
+        })
+      });
+    </script>
+  </body>
+</html>>
       <!-- Clickable label for Vienna -->
       <a class="overlay" id="vienna" target="_blank" href="http://en.wikipedia.org/wiki/Vienna">Vienna</a>
       <div id="marker" title="Marker"></div>
