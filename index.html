@@ -1,49 +1,19 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
-    <link rel='stylesheet' href='http://ol3js.org/en/master/css/ol.css'>
+    <meta charset="utf-8">
+    <title>OpenLayers</title>
+    <script type="text/javascript" src="main.js"></script>
     <style>
-      #map {
+      html, body, #map-container {
+        margin: 0;
         height: 100%;
         width: 100%;
+        font-family: sans-serif;
       }
     </style>
-    <title>OpenLayers 3 example</title>
-    <script src="ol/ol.js" type="text/javascript"></script>
   </head>
   <body>
-    <h1>My Map</h1>
-    <div id="map"></div>
-    <script type="text/javascript">
-      var map = new ol.Map({
-        target: 'map',
-        layers: [
-           new ol.layer.Tile({
-              source: new ol.source.OSM()
-           }),
-           new ol.layer.Vector({
-              title: 'added Layer',
-              source: new ol.source.GeoJSON({
-                 projection : 'EPSG:4326',
-                 url: 'mygeojson.json'
-              })
-           })
-        ],
-        view: new ol.View({
-          center:[52.5243700 , 13.4105300],
-          zoom:2
-
-        })
-      });
-    </script>
-  </body>
-</html>>
-      <!-- Clickable label for Vienna -->
-      <a class="overlay" id="vienna" target="_blank" href="http://en.wikipedia.org/wiki/Vienna">Vienna</a>
-      <div id="marker" title="Marker"></div>
-      <!-- Popup -->
-      <div id="popup" title="Welcome to OpenLayers"></div>
-    </div>
-    <script src="index.js"></script>
+    <div id="map-container"></div>
   </body>
 </html>
